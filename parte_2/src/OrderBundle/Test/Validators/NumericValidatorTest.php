@@ -1,31 +1,34 @@
 <?php
 
-namespace OrderBundle\Validators\Test;
+
+namespace OrderBundle\Test\Validators;
 
 use OrderBundle\Validators\NumericValidator;
 use PHPUnit\Framework\TestCase;
 
 class NumericValidatorTest extends TestCase
 {
+
     /**
      * @dataProvider valueProvider
      */
-    public function testIsValid($value, $expectedResult)
+    public function testIsValid($value, $expected)
     {
-        $numericValidator = new NumericValidator($value);
+        $notEmptyValidator = new NumericValidator($value);
 
-        $isValid = $numericValidator->isValid();
+        $isValid = $notEmptyValidator->isValid();
 
-        $this->assertEquals($expectedResult, $isValid);
+        $this->assertEquals($expected, $isValid);
     }
-
+    
     public function valueProvider()
     {
         return [
-            'shouldBeValidWhenValueIsANumber' => ['value' => 20, 'expectedResult' => true],
-            'shouldBeValidWhenValueIsANumericString' => ['value' => '20', 'expectedResult' => true],
-            'shouldNotBeValidWhenValueIsNotANumber' => ['value' => 'bla', 'expectedResult' => false],
-            'shouldNotBeValidWhenValueIsEmpty' => ['value' => '', 'expectedResult' => false],
+            'shouldNotBeValidWhenValueIsNotANumber' => ['value' => 'foo', 'expected' => false],
+            'shoulddBeValidWhenValueIsANumber' => ['value' => 10, 'expected' => true],
+            'shouldBeValidWhenValueIsADecimal' => ['value' => 10.2, 'expected' => true],
+            'shouldBeValidWhenValueIsAStringNumber' => ['value' => '10', 'expected' => true],
+            'shouldNotBeValidWhenValueIsEmpty' => ['value' => '', 'expected' => false]
         ];
     }
 }

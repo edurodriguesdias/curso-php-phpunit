@@ -1,0 +1,10 @@
+version: "3.5"
+services:
+    php:
+        build:
+            context: .
+        image: picpay/php-test
+        container_name: test
+        volumes:
+            - .:/var/www/html
+        command: ["./docker-entrypoint.sh"]

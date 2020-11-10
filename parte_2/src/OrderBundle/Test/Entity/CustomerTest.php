@@ -8,47 +8,41 @@ use PHPUnit\Framework\TestCase;
 class CustomerTest extends TestCase
 {
     /**
-     * @test
      * @dataProvider customerAllowedDataProvider
      */
-    public function isAllowedToOrder($isActive, $isBlocked, $expectedAlloed)
+    public function testIsAllowedToOrder($isActive, $isBlocked, $expected)
     {
         $customer = new Customer(
             $isActive,
             $isBlocked,
-            'Vinicius Oliveira',
-            '+5511955558888'
+            'Walter White',
+            '5511992392039'
         );
 
         $isAllowed = $customer->isAllowedToOrder();
 
-        $this->assertEquals($expectedAlloed, $isAllowed);
+        $this->assertEquals($expected, $isAllowed);
     }
+
 
     public function customerAllowedDataProvider()
     {
         return [
-            'shouldBeAllowedWhenIsActiveAndNotBlocked' => [
+            'shouldBeAllowedWhenCustomerIsNotBlocked' => [
                 'isActive' => true,
                 'isBlocked' => false,
-                'expectedAllowed' => true
+                'expected' => true
             ],
-            'shouldNotBeAllowedWhenIsActiveButIsBlocked' => [
+            'shouldNotBeAllowedWhenCustomerIsBlocked' => [
                 'isActive' => true,
                 'isBlocked' => true,
-                'expectedAllowed' => false
+                'expected' => false
             ],
-            'shouldNotBeAllowedWhenIsNotActive' => [
+            'shouldNotBeAllowedWhenCustomerIsNotActive' => [
                 'isActive' => false,
                 'isBlocked' => false,
-                'expectedAllowed' => false
-            ],
-            'shouldNotBeAllowedWhenIsNotActiveAndIsBlocked' => [
-                'isActive' => false,
-                'isBlocked' => true,
-                'expectedAllowed' => false
+                'expected' => false
             ]
         ];
     }
 }
-

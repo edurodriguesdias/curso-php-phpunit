@@ -9,7 +9,7 @@ class Item
     private $available;
     private $value;
 
-    private function __construct(
+    public function __construct(
         $name,
         $available,
         $value,
@@ -30,6 +30,21 @@ class Item
     public function getValue()
     {
         return $this->value;
+    }
+
+    public function setName($name)
+    {
+        return $this->name = $name;
+    }
+
+    public function setValue($value)
+    {
+        return $this->value = $value;
+    }
+
+    public function setIsAvailable($isAvailable)
+    {
+        return $this->available = $isAvailable;
     }
 
     public function isAvailable()

@@ -2,52 +2,59 @@
 
 namespace OrderBundle\Test\Service;
 
-use OrderBundle\Repository\BadWordsRepository;
 use OrderBundle\Service\BadWordsValidator;
+use OrderBundle\Repository\BadWordsRepositoryInterface;
+
 use PHPUnit\Framework\TestCase;
 
 class BadWordsValidatorTest extends TestCase
 {
     /**
-     * @test
      * @dataProvider badWordsDataProvider
      */
-    public function hasBadWords($badWordsList, $text, $foundBadWords)
+    public function testHasBadWords($message, $expected, $hasBadWordList)
     {
-        $badWordsRepository = $this->createMock(BadWordsRepository::class);
+        $badWordList = [];
 
-        $badWordsRepository->method('findAllAsArray')
-            ->willReturn($badWordsList);
+        if($hasBadWordList) {
+            $badWordList = [
+                'bobo', 'besta', 'chato', 'puto'
+            ];
+        }
+
+        $badWordsRepository = $this->createMock(BadWordsRepositoryInterface::class);
+
+        $badWordsRepository->method('findAllAsArray')->willReturn($badWordList);
 
         $badWordsValidator = new BadWordsValidator($badWordsRepository);
 
-        $hasBadWords = $badWordsValidator->hasBadWords($text);
+        $hasBadWords = $badWordsValidator->hasBadWords($message);
 
-        $this->assertEquals($foundBadWords, $hasBadWords);
+        $this->assertEquals($expected, $hasBadWords);
     }
 
     public function badWordsDataProvider()
     {
         return [
-            'shouldFindWhenHasBadWords' => [
-                'badWordsList' => ['bobo', 'chule', 'besta'],
-                'text' => 'Seu restaurante e muito bobo',
-                'foundBadWords' => true
+            'shouldNotBeValidWhenHasBadWords' => [
+                'message' => 'você é muito bobo',
+                'expected' => true,
+                'hasBadWordList' => true
             ],
-            'shouldNotFindWhenHasNoBadWords' => [
-                'badWordsList' => ['bobo', 'chule', 'besta'],
-                'text' => 'Trocar batata por salada',
-                'foundBadWords' => false
+            'shouldBeValidWhenHasNoBadWords' => [
+                'message' => 'Gostei muito desse restaurante',
+                'expected' => false,
+                'hasBadWordList' => true
             ],
-            'shouldNotFindWhenTextIsEmpty' => [
-                'badWordsList' => ['bobo', 'chule', 'besta'],
-                'text' => '',
-                'foundBadWords' => false
+            'shouldNotFoundWhenMessageIsEmpty' => [
+                'message' => '',
+                'expected' => false,
+                'hasBadWordList' => true                
             ],
-            'shouldNotFindWhenBadWordsListIsEmpty' => [
-                'badWordsList' => [],
-                'text' => 'Seu restaurante e muito bobo',
-                'foundBadWords' => false
+            'shouldNotFoundWhenBadWordsListIsEmpty' => [
+                'message' => 'Estou muito puto com vocês',
+                'expected' => false,
+                'hasBadWordList' => false
             ]
         ];
     }

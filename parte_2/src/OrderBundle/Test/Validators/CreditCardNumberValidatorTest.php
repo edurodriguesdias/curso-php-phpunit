@@ -1,6 +1,6 @@
 <?php
 
-namespace OrderBundle\Validators\Test;
+namespace OrderBundle\Test\Validators;
 
 use OrderBundle\Validators\CreditCardNumberValidator;
 use PHPUnit\Framework\TestCase;
@@ -10,22 +10,23 @@ class CreditCardNumberValidatorTest extends TestCase
     /**
      * @dataProvider valueProvider
      */
-    public function testIsValid($value, $expectedResult)
+    public function testisValid($value, $expected)
     {
-        $creditCardNumberValidator = new CreditCardNumberValidator($value);
+        $creditCardValidator = new CreditCardNumberValidator($value);
 
-        $isValid = $creditCardNumberValidator->isValid();
+        $isValid = $creditCardValidator->isValid();
 
-        $this->assertEquals($expectedResult, $isValid);
+        $this->assertEquals($expected, $isValid);
     }
-
+    
     public function valueProvider()
     {
         return [
-            'shouldBeValidWhenValueIsANumber' => ['value' => 4928148506666302, 'expectedResult' => true],
-            'shouldBeValidWhenValueIsACreditCardAsString' => ['value' => '4928148506666302', 'expectedResult' => true],
-            'shouldNotBeValidWhenValueIsNotACreditCard' => ['value' => '12738', 'expectedResult' => false],
-            'shouldNotBeValidWhenValueIsEmpty' => ['value' => '', 'expectedResult' => false]
+            'shouldBeValidWhenCardNumberIsCorrect' => ['value' => '9999999999999999', 'expected' => true],
+            'shouldNotBeValidWhenCardNumberIsNotNumeric' => ['value' => 'ABCDEFHGIJKLMNOP', 'expected' => false],
+            'shouldNotBeValidWhenCardNumberIsLessThanSixTeenDigits' => ['value' => '999999999999', 'expected' => false],
+            'shouldNotBeValidWhenCardNumberIsGreaterThanSixTeenDigits' => ['value' => '99999999999999999999', 'expected' => false],
+            'shouldBeValidWhenCardNumberIsAnInteger' => ['value' => 9999999999999999, 'expected' => true]
         ];
     }
 }
